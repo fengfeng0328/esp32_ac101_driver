@@ -53,6 +53,7 @@ static void alexa__AC101_task(void *pvParameters)
 	char buf[2048];
 	int recv_len=0;
 	i2s_start(I2S_NUM_0);
+	Codec_Mute(1);
 	while(1)
 	{
 		recv_len=i2s_read_bytes(I2S_NUM_0,buf,2048,0);

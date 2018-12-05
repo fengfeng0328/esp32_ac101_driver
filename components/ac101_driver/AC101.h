@@ -33,9 +33,9 @@ esp_err_t AC101_Write_Reg(uint8_t reg, uint16_t val);
 esp_err_t ac101_set_spk_volume(uint8_t volume);
 
 
-void init_gpio_PA(int en);
-void enable_PA(int en);
-void codec_mute(int en);
+esp_err_t Init_Gpio_PA(int EN);
+esp_err_t EN_PA(int EN);
+esp_err_t Codec_Mute(int EN);
 
 
 #endif /* MAIN_AC101_H_ */

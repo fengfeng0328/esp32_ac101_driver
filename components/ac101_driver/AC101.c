@@ -152,7 +152,7 @@ esp_err_t AC101_init() {
 	I2C_CHECK(AC101_Write_Reg(0x58, 0xeabd), 18);
 //	I2C_CHECK(AC101_Write_Reg(0x4a, 0x0040), 18);
 	ac101_set_spk_volume(40);
-	init_gpio_PA(1);
+	Init_Gpio_PA(1);
 
 	return 0;
 }
@@ -208,7 +208,7 @@ int AC101_init_16k() {
 	//* Enable Speaker output
 	I2C_CHECK(AC101_Write_Reg(0x58, 0xeabd), 18);
 //	I2C_CHECK(AC101_Write_Reg(0x4a, 0x0040), 18);
-	init_gpio_PA(1);
+	Init_Gpio_PA(1);
 	return 0;
 }
 
@@ -245,50 +245,57 @@ void mic_init(void)
 	I2C_CHECK(AC101_Write_Reg(0x50, 0xbbc3), 14);		
 }
 
-void init_gpio_PA(int en)
+esp_err_t Init_Gpio_PA(int EN)
 {
-	gpio_config_t io_conf;  
-    io_conf.intr_type = GPIO_PIN_INTR_DISABLE;
-    //set as output mode
-    io_conf.mode = GPIO_MODE_OUTPUT;
-    //bit mask of the pins that you want to set,e.g.GPIO18/19
-    io_conf.pin_bit_mask = PA_EN_PIN_SEL;
-    //disable pull-down mode
-    io_conf.pull_down_en = 0;
-    //disable pull-up mode
-    io_conf.pull_up_en = 0;
-    //configure GPIO with the given settings
-    gpio_config(&io_conf);
+	gpio_config_t io_conf;
+	io_conf.intr_type = GPIO_PIN_INTR_DISABLE;
+	//set as output mode
+	io_conf.mode = GPIO_MODE_OUTPUT;
+	//bit mask of the pins that you want to set,e.g.GPIO18/19
+	io_conf.pin_bit_mask = PA_EN_PIN_SEL;
+	//disable pull-down mode
+	io_conf.pull_down_en = 0;
+	//disable pull-up mode
+	io_conf.pull_up_en = 0;
+	//configure GPIO with the given settings
+	gpio_config(&io_conf);
 	//gpio_set_level(PA_EN_PIN, 0);
-	enable_PA(en);
-}
-void enable_PA(int en)
-{
-	if(en > 0)
-	{
-		gpio_set_level(PA_EN_PIN, 1);
-	}else
-	{
-		gpio_set_level(PA_EN_PIN, 0);
-	}
+	EN_PA(EN);
+
+	return ESP_OK;
 }
 
-void codec_mute(int en)
+esp_err_t EN_PA(int EN) {
+	if (EN == 1) {
+		gpio_set_level(PA_EN_PIN, 1);
+	} else if (EN == 0) {
+		gpio_set_level(PA_EN_PIN, 0);
+	} else {
+		printf("Please Input PA 0 or 1\n");
+		return ESP_FAIL;
+	}
+	return ESP_OK;
+}
+
+esp_err_t Codec_Mute(int EN)
 {
-	enable_PA(en);
+	/* Reg 56h_Headphone Output Control Register */
 	uint16_t reg_val = AC101_read_Reg(0x56);
-	
-	if(en >0)
-	{
-		enable_PA(0);
-		reg_val &= (~(3<<12));
-	}
-	else
-	{
-		enable_PA(1);
+
+	if (EN == 1) {
+		EN_PA(!EN);
+		/* RHPPA_MUTE:Mute LHPPA_MUTE:Mute */
+		reg_val &= (~(3 << 12));
+	} else if (EN == 0) {
+		EN_PA(!EN);
+		/* RHPPA_MUTE:On LHPPA_MUTE:On */
 		reg_val |= (3 << 12);
+	}else{
+		printf("Please Input Mute 0 or 1\n");
+		return ESP_FAIL;
 	}
-	AC101_Write_Reg(0x56,reg_val);
+	AC101_Write_Reg(0x56, reg_val);
+	return ESP_OK;
 }
 
 
