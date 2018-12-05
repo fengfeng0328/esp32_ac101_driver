@@ -27,6 +27,8 @@ void mic_init(void);
 uint16_t AC101_read_Reg(uint8_t reg) ;
 esp_err_t AC101_Write_Reg(uint8_t reg, uint16_t val);
 
+esp_err_t ac101_set_spk_volume(uint8_t volume);
+
 
 void init_gpio_PA(int en);
 void enable_PA(int en);

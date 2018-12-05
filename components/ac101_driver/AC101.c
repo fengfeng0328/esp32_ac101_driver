@@ -81,14 +81,18 @@ esp_err_t AC101_Write_Reg(uint8_t reg, uint16_t val) {
 }
 esp_err_t ac101_set_spk_volume(uint8_t volume)
 {
-	uint16_t res;
-	esp_err_t ret;
-	volume = volume/2;
-	res = AC101_read_Reg(SPKOUT_CTRL);
-	res &= (~0x1f);
-	volume &= 0x1f;
-	res |= volume;
-	ret = AC101_Write_Reg(SPKOUT_CTRL,res);
+	if (volume > 100) {
+		printf("Please Input Volume Between 0 and 100\n");
+		return ESP_FAIL;
+	}
+	uint16_t val = 0;
+	volume = (uint8_t)((float)0x1f / 100 * volume);
+//	printf("volume=%d\n", volume);
+	val = AC101_read_Reg(SPKOUT_CTRL);
+	val &= (~0x1f);		// 清零后5bit
+	volume &= 0x1f;		// 只保留后5bit
+	val |= volume;		// 赋值后5bit
+	esp_err_t ret = AC101_Write_Reg(SPKOUT_CTRL, val);
 	return ret;
 }
 
@@ -147,7 +151,7 @@ esp_err_t AC101_init() {
 	//* Enable Speaker output
 	I2C_CHECK(AC101_Write_Reg(0x58, 0xeabd), 18);
 //	I2C_CHECK(AC101_Write_Reg(0x4a, 0x0040), 18);
-	ac101_set_spk_volume(80);
+	ac101_set_spk_volume(100);
 	init_gpio_PA(1);
 
 	return 0;
