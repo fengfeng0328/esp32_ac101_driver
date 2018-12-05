@@ -107,7 +107,9 @@ void app_main() {
 	ESP_ERROR_CHECK(ret);
 
 //	audio_recorder_AC101_init_16KHZ_16BIT_1CHANNEL();
+//	SET_AudioFormats(0,44100,16,2);
 	audio_recorder_AC101_init_44KHZ_16BIT_2CHANNEL();
+//	SET_AudioFormats(0,8000,16,2);
 	xTaskCreatePinnedToCore(&alexa__AC101_task, "alexa__AC101_task", 8096, NULL,
 			2, NULL, 1);
 }

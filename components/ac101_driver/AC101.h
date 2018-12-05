@@ -46,5 +46,7 @@ esp_err_t EN_PA(int EN);
  * */
 esp_err_t Codec_Mute(int EN);
 
+esp_err_t SET_AudioFormats(i2s_port_t i2s_num, uint32_t rate, i2s_bits_per_sample_t bits, i2s_channel_t ch);
+
 
 #endif /* MAIN_AC101_H_ */
