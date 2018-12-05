@@ -31,18 +31,25 @@ static char *AC101_TAG = "AC101";
 		
 #define SPKOUT_CTRL			0x58
 
-void AC101_i2c_master_init() {
+esp_err_t AC101_i2c_master_init() {
 	int i2c_master_port = I2C_MASTER_NUM;
 	i2c_config_t conf;
 	conf.mode = I2C_MODE_MASTER;
-	conf.sda_io_num = (gpio_num_t) I2C_MASTER_SDA_IO;
+	conf.sda_io_num = I2C_MASTER_SDA_IO;
 	conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
-	conf.scl_io_num = (gpio_num_t) I2C_MASTER_SCL_IO;
+	conf.scl_io_num = I2C_MASTER_SCL_IO;
 	conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
 	conf.master.clk_speed = I2C_MASTER_FREQ_HZ;
-	i2c_param_config((i2c_port_t) i2c_master_port, &conf);
-	i2c_driver_install((i2c_port_t) i2c_master_port, conf.mode,
-	I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
+	if (i2c_param_config(i2c_master_port, &conf) != ESP_OK) {
+		printf("i2c_param_config Error\n");
+		return ESP_FAIL;
+	}
+	if (i2c_driver_install(i2c_master_port, conf.mode,
+	I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0) != ESP_OK) {
+		printf("i2c_driver_install Error\n");
+		return ESP_FAIL;
+	}
+	return ESP_OK;
 }
 
 uint16_t AC101_read_Reg(uint8_t reg) {

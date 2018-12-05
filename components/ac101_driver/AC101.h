@@ -13,6 +13,14 @@
 #define PA_EN_PIN   21
 #define PA_EN_PIN_SEL      (1ULL<<PA_EN_PIN)
 
+/*
+ * @AC101 I2C Init
+ * @return
+ *     - ESP_OK Success
+ *     - ESP_FAIL Fail
+ * */
+esp_err_t AC101_i2c_master_init();
+
 void I2C_init();
 int AC101_init();
 void mic_init(void);
