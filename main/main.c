@@ -53,7 +53,7 @@ void audio_recorder_AC101_init_44KHZ_16BIT_2CHANNEL()	// I2S_MODE_TX
 	AC101_init_44KHZ_16BIT_2CHANNEL();	// 寄存器未配置
 
 	i2s_config_t i2s_config = {
-	        .mode = I2S_MODE_MASTER | I2S_MODE_TX,
+			.mode = I2S_MODE_MASTER |I2S_MODE_RX | I2S_MODE_TX,
 	        .sample_rate = 44100,
 	        .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
 	        .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,                           //2-channels
@@ -106,7 +106,8 @@ void app_main() {
 	}
 	ESP_ERROR_CHECK(ret);
 
-	audio_recorder_AC101_init_16KHZ_16BIT_1CHANNEL();
+//	audio_recorder_AC101_init_16KHZ_16BIT_1CHANNEL();
+	audio_recorder_AC101_init_44KHZ_16BIT_2CHANNEL();
 	xTaskCreatePinnedToCore(&alexa__AC101_task, "alexa__AC101_task", 8096, NULL,
 			2, NULL, 1);
 }
