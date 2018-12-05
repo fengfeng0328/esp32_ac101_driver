@@ -61,20 +61,23 @@ uint16_t AC101_read_Reg(uint8_t reg) {
 	val=(data_rd[0]<<8)+data_rd[1];
 	return val;
 }
-esp_err_t AC101_Write_Reg(uint8_t reg, uint16_t val)
-{
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-	uint8_t send_buff[4];
-	send_buff[0] = (AC101_ADDR << 1);
-	send_buff[1] = reg;
-	send_buff[2] = (val>>8) & 0xff;
-	send_buff[3] = val & 0xff;
-    i2c_master_start(cmd);
-    i2c_master_write(cmd, send_buff, 4, ACK_CHECK_EN);
-    i2c_master_stop(cmd);
-    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_RATE_MS);
-    i2c_cmd_link_delete(cmd);
-    return ret;
+esp_err_t AC101_Write_Reg(uint8_t reg, uint16_t val) {
+	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+
+	uint8_t sbuff[4];
+	sbuff[0] = (AC101_ADDR << 1);
+	sbuff[1] = reg;
+	sbuff[2] = (val >> 8) & 0xff;
+	sbuff[3] = val & 0xff;
+
+	i2c_master_start(cmd);
+	i2c_master_write(cmd, sbuff, sizeof(sbuff), ACK_CHECK_EN);
+	i2c_master_stop(cmd);
+
+	esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd,
+			1000 / portTICK_RATE_MS);
+	i2c_cmd_link_delete(cmd);
+	return ret;
 }
 esp_err_t ac101_set_spk_volume(uint8_t volume)
 {
@@ -90,8 +93,12 @@ esp_err_t ac101_set_spk_volume(uint8_t volume)
 }
 
 
-int AC101_init() {
-	AC101_i2c_master_init();
+esp_err_t AC101_init() {
+	esp_err_t ret = AC101_i2c_master_init();
+	if (ret != ESP_OK) {
+		printf("AC101_i2c_master_init Fail\n");
+		return ESP_FAIL;
+	}
 	esp_err_t Res;
 	Res = AC101_Write_Reg(0x0, 0x123);					//soft reset AC101
 	if (ESP_OK != Res) {

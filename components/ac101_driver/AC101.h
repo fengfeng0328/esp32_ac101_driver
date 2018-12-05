@@ -9,7 +9,7 @@
 #define MAIN_AC101_H_
 
 #include "stdint.h"
-#define AC101_ADDR	0X1a   //0011010
+#define AC101_ADDR	0x1a   //0011010
 #define PA_EN_PIN   21
 #define PA_EN_PIN_SEL      (1ULL<<PA_EN_PIN)
 
@@ -22,7 +22,7 @@
 esp_err_t AC101_i2c_master_init();
 
 void I2C_init();
-int AC101_init();
+esp_err_t AC101_init();
 void mic_init(void);
 uint16_t AC101_read_Reg(uint8_t reg) ;
 esp_err_t AC101_Write_Reg(uint8_t reg, uint16_t val);
