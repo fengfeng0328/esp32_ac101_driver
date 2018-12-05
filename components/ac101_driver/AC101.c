@@ -99,15 +99,14 @@ esp_err_t AC101_init() {
 		printf("AC101_i2c_master_init Fail\n");
 		return ESP_FAIL;
 	}
-	esp_err_t Res;
-	Res = AC101_Write_Reg(0x0, 0x123);					//soft reset AC101
-	if (ESP_OK != Res) {
-		printf("CODEC ERR\r\n");
-		return 1;							    		//reset failed, WM8978 exception
-	} else {        
-		printf("CODEC OK\r\n");
+	ret = AC101_Write_Reg(0x0, 0x123);					//soft reset AC101
+	if (ESP_OK != ret) {
+		printf("Soft Reset Register AC101 Error\r\n");
+		return ESP_FAIL;
+	} else {
+		printf("Soft Reset Register AC101\r\n");
 	}
-	vTaskDelay(1000 / portTICK_PERIOD_MS);
+//	vTaskDelay(1000 / portTICK_PERIOD_MS);
 	I2C_CHECK(AC101_Write_Reg(0x58, 0xe880),1);
 
 	//Enable the PLL from 256*44.1KHz MCLK source
@@ -148,7 +147,7 @@ esp_err_t AC101_init() {
 	//* Enable Speaker output
 	I2C_CHECK(AC101_Write_Reg(0x58, 0xeabd), 18);
 //	I2C_CHECK(AC101_Write_Reg(0x4a, 0x0040), 18);
-	ac101_set_spk_volume(20);
+	ac101_set_spk_volume(80);
 	init_gpio_PA(1);
 
 	return 0;
