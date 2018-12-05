@@ -151,7 +151,7 @@ esp_err_t AC101_init() {
 	//* Enable Speaker output
 	I2C_CHECK(AC101_Write_Reg(0x58, 0xeabd), 18);
 //	I2C_CHECK(AC101_Write_Reg(0x4a, 0x0040), 18);
-	ac101_set_spk_volume(100);
+	ac101_set_spk_volume(40);
 	init_gpio_PA(1);
 
 	return 0;

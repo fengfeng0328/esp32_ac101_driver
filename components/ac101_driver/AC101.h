@@ -27,6 +27,9 @@ void mic_init(void);
 uint16_t AC101_read_Reg(uint8_t reg) ;
 esp_err_t AC101_Write_Reg(uint8_t reg, uint16_t val);
 
+/*
+ * @Please Input Volume Between 0 and 100
+ * */
 esp_err_t ac101_set_spk_volume(uint8_t volume);
 
 
