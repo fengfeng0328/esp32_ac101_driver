@@ -31,10 +31,18 @@ esp_err_t AC101_Write_Reg(uint8_t reg, uint16_t val);
  * @Please Input Volume Between 0 and 100
  * */
 esp_err_t ac101_set_spk_volume(uint8_t volume);
-
-
+/*
+ * @Init Gpio PA 1:enable 0:disable
+ * */
 esp_err_t Init_Gpio_PA(int EN);
+
+/*
+ * @BYPASS 1:enable 0:disable
+ * */
 esp_err_t EN_PA(int EN);
+/*
+ * @EN 1:mute 0:on
+ * */
 esp_err_t Codec_Mute(int EN);
 
 
