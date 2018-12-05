@@ -1,19 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-
 #include "driver/gpio.h"
 #include "driver/i2s.h"
-#include "../components/ac101_driver/AC101.h"
-#include "../components/ac101_driver/recoder.h"
-#include "../components/ac101_driver/uart.h"
-
 #include "nvs_flash.h"
 #include "sdkconfig.h"
 
+#include "AC101.h"
+#include "recoder.h"
+#include "uart.h"
 
 #define CONFIG_AC101_I2S_DATA_IN_PIN 35
 
