@@ -22,7 +22,8 @@
 esp_err_t AC101_i2c_master_init();
 
 void I2C_init();
-esp_err_t AC101_init();
+esp_err_t AC101_init_16KHZ_16BIT_1CHANNEL();
+esp_err_t AC101_init_44KHZ_16BIT_2CHANNEL();
 void mic_init(void);
 uint16_t AC101_read_Reg(uint8_t reg) ;
 esp_err_t AC101_Write_Reg(uint8_t reg, uint16_t val);
